@@ -91,6 +91,7 @@ function App() {
   const [partnerFormLabel, setPartnerFormLabel] = useState(partnerConfig.label);
   const [partnerSaving, setPartnerSaving] = useState(false);
   const [partnerStatus, setPartnerStatus] = useState<string | null>(null);
+  const [partnerLoadedFromServer, setPartnerLoadedFromServer] = useState(false);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -99,6 +100,29 @@ function App() {
   useEffect(() => {
     localStorage.setItem(PARTNER_STORAGE_KEY, JSON.stringify(partnerConfig));
   }, [partnerConfig]);
+
+  // Load partner link from Supabase once per session (overrides local partner id/label; keeps local email)
+  useEffect(() => {
+    if (!session || partnerLoadedFromServer) return;
+    const loadLink = async () => {
+      const { data, error } = await supabase
+        .from("partner_links")
+        .select("partner_user_id, label")
+        .eq("user_id", session.user.id)
+        .maybeSingle();
+      if (!error && data) {
+        setPartnerConfig((prev) => ({
+          email: prev.email,
+          userId: data.partner_user_id ?? prev.userId,
+          label: data.label ?? prev.label,
+        }));
+        setPartnerFormUserId(data.partner_user_id ?? partnerFormUserId);
+        setPartnerFormLabel(data.label ?? partnerFormLabel);
+      }
+      setPartnerLoadedFromServer(true);
+    };
+    loadLink();
+  }, [session, partnerLoadedFromServer, partnerFormLabel, partnerFormUserId]);
 
   const displayDate = useMemo(() => {
     const date = new Date(state.date);
@@ -334,7 +358,26 @@ function App() {
     }
 
     setPartnerConfig({ email: nextEmail, userId: nextId, label: nextLabel });
-    setPartnerStatus("Partner saved. Make sure they shared access to you.");
+    if (session) {
+      const { error } = await supabase
+        .from("partner_links")
+        .upsert(
+          {
+            user_id: session.user.id,
+            partner_user_id: nextId,
+            label: nextLabel,
+          },
+          { onConflict: "user_id" },
+        );
+      if (error) {
+        console.error("Failed to save partner link", error);
+        setPartnerError("Could not save partner on server; saved locally only.");
+      } else {
+        setPartnerStatus("Partner saved (synced). Make sure they shared access to you.");
+      }
+    } else {
+      setPartnerStatus("Partner saved locally. Sign in to sync.");
+    }
     setPartnerSaving(false);
   };
 
@@ -345,6 +388,7 @@ function App() {
     setPartnerFormLabel("Partner");
     setPartnerStatus(null);
     setPartnerError(null);
+    setPartnerLoadedFromServer(false);
   };
 
   if (sessionLoading) {
