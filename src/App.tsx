@@ -15,7 +15,17 @@ type Counters = {
   waterMl: number;
 };
 
+type PartnerConfig = {
+  email: string;
+  userId: string;
+  label: string;
+};
+
 const STORAGE_KEY = "daily-counter-state";
+const PARTNER_STORAGE_KEY = "daily-counter-partner";
+const ENV_PARTNER_USER_ID = import.meta.env.VITE_PARTNER_USER_ID as string | undefined;
+const ENV_PARTNER_LABEL = (import.meta.env.VITE_PARTNER_LABEL as string | undefined) || "Partner";
+const PARTNER_RESOLVER_URL = import.meta.env.VITE_PARTNER_RESOLVER_URL as string | undefined;
 
 const dateKey = (date: Date) => {
   const year = date.getFullYear();
@@ -57,10 +67,38 @@ function App() {
     startOfMonth(new Date())
   );
   const [history, setHistory] = useState<Record<string, Counters>>({});
+  const [partnerToday, setPartnerToday] = useState<Counters | null>(null);
+  const [partnerError, setPartnerError] = useState<string | null>(null);
+  const [partnerConfig, setPartnerConfig] = useState<PartnerConfig>(() => {
+    if (typeof window !== "undefined") {
+      const raw = localStorage.getItem(PARTNER_STORAGE_KEY);
+      if (raw) {
+        try {
+          return JSON.parse(raw) as PartnerConfig;
+        } catch {
+          // ignore malformed partner data
+        }
+      }
+    }
+    return {
+      email: "",
+      userId: ENV_PARTNER_USER_ID ?? "",
+      label: ENV_PARTNER_LABEL,
+    };
+  });
+  const [partnerFormEmail, setPartnerFormEmail] = useState(partnerConfig.email);
+  const [partnerFormUserId, setPartnerFormUserId] = useState(partnerConfig.userId);
+  const [partnerFormLabel, setPartnerFormLabel] = useState(partnerConfig.label);
+  const [partnerSaving, setPartnerSaving] = useState(false);
+  const [partnerStatus, setPartnerStatus] = useState<string | null>(null);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [state]);
+
+  useEffect(() => {
+    localStorage.setItem(PARTNER_STORAGE_KEY, JSON.stringify(partnerConfig));
+  }, [partnerConfig]);
 
   const displayDate = useMemo(() => {
     const date = new Date(state.date);
@@ -204,10 +242,109 @@ function App() {
     loadMonth();
   }, [historyMonth, session]);
 
+  // Fetch partner's today (optional, requires share + partner user id)
+  useEffect(() => {
+    const loadPartner = async () => {
+      if (!session || !partnerConfig.userId) {
+        setPartnerToday(null);
+        setPartnerError(null);
+        return;
+      }
+      const today = todayKey();
+      const { data, error } = await supabase
+        .from("daily_metrics")
+        .select("date, water_ml, poop_count, fart_count")
+        .eq("user_id", partnerConfig.userId)
+        .eq("date", today)
+        .maybeSingle();
+      if (error) {
+        console.error("Failed to load partner data", error);
+        setPartnerToday(null);
+        setPartnerError("Cannot load partner data (check share/permissions).");
+        return;
+      }
+      setPartnerError(null);
+      if (data) {
+        setPartnerToday({
+          date: data.date,
+          waterMl: data.water_ml ?? 0,
+          poop: data.poop_count ?? 0,
+          farts: data.fart_count ?? 0,
+        });
+      } else {
+        setPartnerToday(null);
+      }
+    };
+    loadPartner();
+  }, [session, state.date, partnerConfig.userId]);
+
   const signOut = async () => {
-    await supabase.auth.signOut();
-    setSession(null);
-    setState(initialState());
+    try {
+      await supabase.auth.signOut({ scope: "local" });
+    } catch (error) {
+      console.error("Sign out failed", error);
+    } finally {
+      localStorage.removeItem("supabase.auth.token");
+      setSession(null);
+      setState(initialState());
+    }
+  };
+
+  const savePartner = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setPartnerSaving(true);
+    setPartnerError(null);
+    setPartnerStatus(null);
+
+    let nextId = partnerFormUserId.trim();
+    const nextEmail = partnerFormEmail.trim();
+    const nextLabel = partnerFormLabel.trim() || "Partner";
+
+    if (PARTNER_RESOLVER_URL && nextEmail) {
+      try {
+        const token = session?.access_token;
+        const resp = await fetch(PARTNER_RESOLVER_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({ email: nextEmail }),
+        });
+        if (!resp.ok) {
+          throw new Error(`Resolver failed (${resp.status})`);
+        }
+        const json = await resp.json();
+        nextId = json.user_id || json.userId || nextId;
+        if (!nextId) {
+          throw new Error("Resolver did not return user_id");
+        }
+      } catch (err) {
+        console.error("Partner resolver error", err);
+        setPartnerError("Could not resolve email to partner ID. Enter user ID manually or fix resolver.");
+        setPartnerSaving(false);
+        return;
+      }
+    }
+
+    if (!nextId) {
+      setPartnerError("Enter partner user ID (or set a resolver + email).");
+      setPartnerSaving(false);
+      return;
+    }
+
+    setPartnerConfig({ email: nextEmail, userId: nextId, label: nextLabel });
+    setPartnerStatus("Partner saved. Make sure they shared access to you.");
+    setPartnerSaving(false);
+  };
+
+  const clearPartner = () => {
+    setPartnerConfig({ email: "", userId: "", label: "Partner" });
+    setPartnerFormEmail("");
+    setPartnerFormUserId("");
+    setPartnerFormLabel("Partner");
+    setPartnerStatus(null);
+    setPartnerError(null);
   };
 
   if (sessionLoading) {
@@ -283,6 +420,17 @@ function App() {
             <div className="pill font-bold text-lg!">Poop: {state.poop}</div>
             <div className="pill font-bold text-lg!">Farts: {state.farts}</div>
           </div>
+          {partnerConfig.userId && (
+            <div className="summary-grid">
+              <div className="pill">{partnerConfig.label} Water: {(partnerToday?.waterMl ?? 0) / 1000} L</div>
+              <div className="pill">{partnerConfig.label} Poop: {partnerToday?.poop ?? 0}</div>
+              <div className="pill">{partnerConfig.label} Farts: {partnerToday?.farts ?? 0}</div>
+              {partnerError && <div className="pill">{partnerError}</div>}
+              {!partnerError && !partnerToday && (
+                <div className="pill">No data for {partnerConfig.label} today.</div>
+              )}
+            </div>
+          )}
         </section>
       </header>
 
@@ -306,7 +454,47 @@ function App() {
             onAdd={() => adjust("farts", 1)}
             onRemove={() => adjust("farts", -1)}
           />
-          {/* <button onClick={resetToday}>Reset every count for today</button> */}
+          <section className="card auth-form mt-3!">
+            <p className="label">Partner access</p>
+            <p className="muted">
+              Enter partner email (resolver) or user ID so you can see their today totals. They also need to share their data with you.
+            </p>
+            <div className="auth-inputs">
+              <input
+                type="email"
+                placeholder="partner@example.com (optional)"
+                value={partnerFormEmail}
+                onChange={(e) => setPartnerFormEmail(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Partner user ID"
+                value={partnerFormUserId}
+                onChange={(e) => setPartnerFormUserId(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Label"
+                value={partnerFormLabel}
+                onChange={(e) => setPartnerFormLabel(e.target.value)}
+              />
+            </div>
+            <div className="actions-grid">
+              <button onClick={savePartner} disabled={partnerSaving} type="button">
+                {partnerSaving ? "Saving..." : "Save partner"}
+              </button>
+              <button className="ghost" onClick={clearPartner} type="button">
+                Clear
+              </button>
+            </div>
+            {partnerStatus && <p className="pill">{partnerStatus}</p>}
+            {partnerError && <p className="pill">{partnerError}</p>}
+            {!PARTNER_RESOLVER_URL && (
+              <p className="muted">
+                Tip: add VITE_PARTNER_RESOLVER_URL to resolve email → user ID via an Edge Function.
+              </p>
+            )}
+          </section>
         </main>
       )}
 
