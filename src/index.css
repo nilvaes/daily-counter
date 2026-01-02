@@ -204,6 +204,22 @@ p {
   gap: 8px;
 }
 
+.two-up {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.stat-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
 .rdp {
   --rdp-accent-color: #a855f7;
   --rdp-background-color: rgba(255, 255, 255, 0.08);

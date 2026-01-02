@@ -5,13 +5,18 @@ type Props = {
   onRemove: (amount: number) => void;
 };
 
-export default function WaterCounter({ waterMl, displayLiters, onAdd, onRemove }: Props) {
+export default function WaterCounter({
+  waterMl,
+  displayLiters,
+  onAdd,
+  onRemove,
+}: Props) {
   return (
     <section className="card tracker">
       <div className="tracker__header">
         <div>
-          <p className="label">Water</p>
-          <h2>{displayLiters} L</h2>
+          <p className="label font-bold! text-2xl!">Water</p>
+          <h2 className="text-xl!">{displayLiters} L</h2>
           <p className="muted">{waterMl} ml today</p>
         </div>
       </div>

@@ -23,9 +23,14 @@ type PartnerConfig = {
 
 const STORAGE_KEY = "daily-counter-state";
 const PARTNER_STORAGE_KEY = "daily-counter-partner";
-const ENV_PARTNER_USER_ID = import.meta.env.VITE_PARTNER_USER_ID as string | undefined;
-const ENV_PARTNER_LABEL = (import.meta.env.VITE_PARTNER_LABEL as string | undefined) || "Partner";
-const PARTNER_RESOLVER_URL = import.meta.env.VITE_PARTNER_RESOLVER_URL as string | undefined;
+const ENV_PARTNER_USER_ID = import.meta.env.VITE_PARTNER_USER_ID as
+  | string
+  | undefined;
+const ENV_PARTNER_LABEL =
+  (import.meta.env.VITE_PARTNER_LABEL as string | undefined) || "Partner";
+const PARTNER_RESOLVER_URL = import.meta.env.VITE_PARTNER_RESOLVER_URL as
+  | string
+  | undefined;
 
 const dateKey = (date: Date) => {
   const year = date.getFullYear();
@@ -87,7 +92,9 @@ function App() {
     };
   });
   const [partnerFormEmail, setPartnerFormEmail] = useState(partnerConfig.email);
-  const [partnerFormUserId, setPartnerFormUserId] = useState(partnerConfig.userId);
+  const [partnerFormUserId, setPartnerFormUserId] = useState(
+    partnerConfig.userId
+  );
   const [partnerFormLabel, setPartnerFormLabel] = useState(partnerConfig.label);
   const [partnerSaving, setPartnerSaving] = useState(false);
   const [partnerStatus, setPartnerStatus] = useState<string | null>(null);
@@ -345,7 +352,9 @@ function App() {
         }
       } catch (err) {
         console.error("Partner resolver error", err);
-        setPartnerError("Could not resolve email to partner ID. Enter user ID manually or fix resolver.");
+        setPartnerError(
+          "Could not resolve email to partner ID. Enter user ID manually or fix resolver."
+        );
         setPartnerSaving(false);
         return;
       }
@@ -359,21 +368,23 @@ function App() {
 
     setPartnerConfig({ email: nextEmail, userId: nextId, label: nextLabel });
     if (session) {
-      const { error } = await supabase
-        .from("partner_links")
-        .upsert(
-          {
-            user_id: session.user.id,
-            partner_user_id: nextId,
-            label: nextLabel,
-          },
-          { onConflict: "user_id" },
-        );
+      const { error } = await supabase.from("partner_links").upsert(
+        {
+          user_id: session.user.id,
+          partner_user_id: nextId,
+          label: nextLabel,
+        },
+        { onConflict: "user_id" }
+      );
       if (error) {
         console.error("Failed to save partner link", error);
-        setPartnerError("Could not save partner on server; saved locally only.");
+        setPartnerError(
+          "Could not save partner on server; saved locally only."
+        );
       } else {
-        setPartnerStatus("Partner saved (synced). Make sure they shared access to you.");
+        setPartnerStatus(
+          "Partner saved (synced). Make sure they shared access to you."
+        );
       }
     } else {
       setPartnerStatus("Partner saved locally. Sign in to sync.");
@@ -457,24 +468,42 @@ function App() {
         <div className="pill">Today · {displayDate}</div>
         <section className="card summary-card">
           <p className="label">Today&apos;s totals</p>
-          <div className="summary-grid">
-            <div className="pill font-bold text-lg!">
-              Water: {waterLiters} L
+          <div className="summary-grid two-up">
+            <div className="stat-block">
+              <p className="muted font-bold! underline-offset-4 underline text-lg! mb-2!">
+                You
+              </p>
+              <div className="pill font-bold text-lg!">
+                Water: {waterLiters} L
+              </div>
+              <div className="pill font-bold text-lg!">Poop: {state.poop}</div>
+              <div className="pill font-bold text-lg!">
+                Farts: {state.farts}
+              </div>
             </div>
-            <div className="pill font-bold text-lg!">Poop: {state.poop}</div>
-            <div className="pill font-bold text-lg!">Farts: {state.farts}</div>
+            {partnerConfig.userId && (
+              <div className="stat-block">
+                <p className="muted font-bold! text-lg! mb-2! underline underline-offset-4">
+                  {partnerConfig.label}
+                </p>
+                <div className="pill font-bold text-lg!">
+                  Water: {(partnerToday?.waterMl ?? 0) / 1000} L
+                </div>
+                <div className="pill font-bold text-lg!">
+                  Poop: {partnerToday?.poop ?? 0}
+                </div>
+                <div className="pill font-bold text-lg!">
+                  Farts: {partnerToday?.farts ?? 0}
+                </div>
+                {partnerError && <div className="pill">{partnerError}</div>}
+                {!partnerError && !partnerToday && (
+                  <div className="pill">
+                    No data for {partnerConfig.label} today.
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-          {partnerConfig.userId && (
-            <div className="summary-grid">
-              <div className="pill">{partnerConfig.label} Water: {(partnerToday?.waterMl ?? 0) / 1000} L</div>
-              <div className="pill">{partnerConfig.label} Poop: {partnerToday?.poop ?? 0}</div>
-              <div className="pill">{partnerConfig.label} Farts: {partnerToday?.farts ?? 0}</div>
-              {partnerError && <div className="pill">{partnerError}</div>}
-              {!partnerError && !partnerToday && (
-                <div className="pill">No data for {partnerConfig.label} today.</div>
-              )}
-            </div>
-          )}
         </section>
       </header>
 
@@ -501,7 +530,8 @@ function App() {
           <section className="card auth-form mt-3!">
             <p className="label">Partner access</p>
             <p className="muted">
-              Enter partner email (resolver) or user ID so you can see their today totals. They also need to share their data with you.
+              Enter partner email (resolver) or user ID so you can see their
+              today totals. They also need to share their data with you.
             </p>
             <div className="auth-inputs">
               <input
@@ -524,7 +554,11 @@ function App() {
               />
             </div>
             <div className="actions-grid">
-              <button onClick={savePartner} disabled={partnerSaving} type="button">
+              <button
+                onClick={savePartner}
+                disabled={partnerSaving}
+                type="button"
+              >
                 {partnerSaving ? "Saving..." : "Save partner"}
               </button>
               <button className="ghost" onClick={clearPartner} type="button">
@@ -535,7 +569,8 @@ function App() {
             {partnerError && <p className="pill">{partnerError}</p>}
             {!PARTNER_RESOLVER_URL && (
               <p className="muted">
-                Tip: add VITE_PARTNER_RESOLVER_URL to resolve email → user ID via an Edge Function.
+                Tip: add VITE_PARTNER_RESOLVER_URL to resolve email → user ID
+                via an Edge Function.
               </p>
             )}
           </section>
