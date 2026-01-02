@@ -14,10 +14,10 @@ export default function FartCounter({ count, onAdd, onRemove }: Props) {
         </div>
       </div>
       <div className="actions-grid">
-        <button onClick={onAdd}>+1</button>
         <button onClick={onRemove} className="ghost">
           -1
         </button>
+        <button onClick={onAdd}>+1</button>
       </div>
     </section>
   );

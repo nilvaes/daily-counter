@@ -15,7 +15,10 @@ export default function AuthForm({ onSignedIn }: Props) {
     event.preventDefault();
     setLoading(true);
     setError(null);
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
     if (signInError) {
       setError(signInError.message);
     } else {
@@ -27,12 +30,11 @@ export default function AuthForm({ onSignedIn }: Props) {
   };
 
   return (
-    <form className="card auth-form" onSubmit={signIn}>
+    <form className="card auth-form gap-4!" onSubmit={signIn}>
       <div>
-        <p className="label">Sign in</p>
-        <p className="muted">Use the email/password you created in Supabase.</p>
+        <p className="label font-bold! text-lg!">Sign in</p>
       </div>
-      <div className="auth-inputs">
+      <div className="auth-inputs gap-4!">
         <input
           type="email"
           placeholder="you@example.com"

@@ -50,8 +50,12 @@ function App() {
   const [hydrated, setHydrated] = useState(false);
   const [syncError, setSyncError] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<"today" | "history">("today");
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-  const [historyMonth, setHistoryMonth] = useState<Date>(() => startOfMonth(new Date()));
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date()
+  );
+  const [historyMonth, setHistoryMonth] = useState<Date>(() =>
+    startOfMonth(new Date())
+  );
   const [history, setHistory] = useState<Record<string, Counters>>({});
 
   useEffect(() => {
@@ -76,13 +80,14 @@ function App() {
     });
   };
 
-  const resetToday = () =>
-    setState({ date: todayKey(), poop: 0, farts: 0, waterMl: 0 });
+  // const resetToday = () =>
+  //   setState({ date: todayKey(), poop: 0, farts: 0, waterMl: 0 });
 
   const waterLiters = (state.waterMl / 1000).toFixed(2);
   const selectedKey = selectedDate ? dateKey(selectedDate) : state.date;
   const selectedFromHistory = history[selectedKey];
-  const selectedSummary = selectedKey === state.date ? state : selectedFromHistory;
+  const selectedSummary =
+    selectedKey === state.date ? state : selectedFromHistory;
 
   // Supabase session listener
   useEffect(() => {
@@ -92,10 +97,12 @@ function App() {
       setSessionLoading(false);
     };
     setup();
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      setSession(nextSession);
-      setHydrated(false);
-    });
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, nextSession) => {
+        setSession(nextSession);
+        setHydrated(false);
+      }
+    );
     return () => {
       listener?.subscription.unsubscribe();
     };
@@ -141,18 +148,16 @@ function App() {
   useEffect(() => {
     const sync = async () => {
       if (!session || !hydrated) return;
-      const { error } = await supabase
-        .from("daily_metrics")
-        .upsert(
-          {
-            user_id: session.user.id,
-            date: state.date,
-            water_ml: state.waterMl,
-            poop_count: state.poop,
-            fart_count: state.farts,
-          },
-          { onConflict: "user_id,date" },
-        );
+      const { error } = await supabase.from("daily_metrics").upsert(
+        {
+          user_id: session.user.id,
+          date: state.date,
+          water_ml: state.waterMl,
+          poop_count: state.poop,
+          fart_count: state.farts,
+        },
+        { onConflict: "user_id,date" }
+      );
       if (error) {
         console.error("Failed to sync data", error);
         setSyncError("Saving to Supabase failed (kept locally).");
@@ -218,17 +223,22 @@ function App() {
   if (!session) {
     return (
       <div className="app-shell">
-        <header className="card app-header">
-          <div className="pill">Welcome</div>
+        <header className="card app-header mb-5">
           <div>
-            <h1>Daily Counter of Your Water, Poop and Farts!</h1>
+            <h1 className="text-2xl! mb-5! text-center">
+              Daily Counter of Your Water, Poop and Farts!
+            </h1>
             <p className="muted">
-              Sign in to save your logs and keep water/poop/fart counts separate for each account.
+              Sign in to save your logs and keep water, poop, and fart counts
+              separate for each account.
             </p>
           </div>
         </header>
         <AuthForm />
-        <p className="muted card">You must sign in to view and log entries.</p>
+        <p className="muted card mt-5!">
+          You must sign in to view and log entries. Use the given email/password
+          to you.
+        </p>
       </div>
     );
   }
@@ -237,19 +247,23 @@ function App() {
     <div className="app-shell">
       <div className="view-tabs">
         <button
-          className={`nav__item${activeView === "today" ? " nav__item--active" : ""}`}
+          className={`nav__item${
+            activeView === "today" ? " nav__item--active" : ""
+          }`}
           onClick={() => setActiveView("today")}
         >
           Today
         </button>
         <button
-          className={`nav__item${activeView === "history" ? " nav__item--active" : ""}`}
+          className={`nav__item${
+            activeView === "history" ? " nav__item--active" : ""
+          }`}
           onClick={() => setActiveView("history")}
         >
           History
         </button>
       </div>
-      <div className="card auth-bar">
+      <div className="card auth-bar mt-4!">
         <div>
           <p className="label">Signed in</p>
           <p className="muted">{session.user.email}</p>
@@ -258,16 +272,16 @@ function App() {
           Sign out
         </button>
       </div>
-      <header className="card app-header">
+      <header className="card app-header mb-4! mt-4!">
         <div className="pill">Today · {displayDate}</div>
-        <div>
-          <h1>Daily Counter of Your Water, Poop and Farts!</h1>
-          <p className="muted">
-            Quick taps to log water, poop, and farts—keeps today saved on your
-            phone.
-          </p>
-        </div>
-        <button onClick={resetToday}>Reset today</button>
+        <section className="card summary-card">
+          <p className="label">Today&apos;s totals</p>
+          <div className="summary-grid">
+            <div className="pill">Water: {waterLiters} L</div>
+            <div className="pill">Poop: {state.poop}</div>
+            <div className="pill">Farts: {state.farts}</div>
+          </div>
+        </section>
       </header>
 
       {activeView === "today" && (
@@ -290,6 +304,7 @@ function App() {
             onAdd={() => adjust("farts", 1)}
             onRemove={() => adjust("farts", -1)}
           />
+          {/* <button onClick={resetToday}>Reset every count for today</button> */}
         </main>
       )}
 
@@ -318,7 +333,9 @@ function App() {
             <h2>{selectedKey}</h2>
             {selectedSummary ? (
               <div className="summary-grid">
-                <div className="pill">Water: {(selectedSummary.waterMl / 1000).toFixed(2)} L</div>
+                <div className="pill">
+                  Water: {(selectedSummary.waterMl / 1000).toFixed(2)} L
+                </div>
                 <div className="pill">Poop: {selectedSummary.poop}</div>
                 <div className="pill">Farts: {selectedSummary.farts}</div>
               </div>
