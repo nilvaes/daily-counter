@@ -9,8 +9,8 @@ export default function PoopCounter({ count, onAdd, onRemove }: Props) {
     <section className="card tracker">
       <div className="tracker__header">
         <div>
-          <p className="label font-bold! text-2xl!">Poop</p>
-          <h2 className="text-lg!">{count} times</h2>
+          <p className="label font-bold! text-2xl!">Kaka</p>
+          <h2 className="text-lg!">{count} kez</h2>
         </div>
       </div>
       <div className="actions-grid">

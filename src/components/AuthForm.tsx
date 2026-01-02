@@ -32,7 +32,7 @@ export default function AuthForm({ onSignedIn }: Props) {
   return (
     <form className="card auth-form gap-4!" onSubmit={signIn}>
       <div>
-        <p className="label font-bold! text-lg!">Sign in</p>
+        <p className="label font-bold! text-lg!">Giriş yap</p>
       </div>
       <div className="auth-inputs gap-4!">
         <input
@@ -44,14 +44,14 @@ export default function AuthForm({ onSignedIn }: Props) {
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Şifre"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
       </div>
       <button type="submit" disabled={loading}>
-        {loading ? "Signing in..." : "Sign in"}
+        {loading ? "Giriş yapılıyor..." : "Giriş yap"}
       </button>
       {error && <p className="pill">{error}</p>}
     </form>

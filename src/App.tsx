@@ -27,7 +27,7 @@ const ENV_PARTNER_USER_ID = import.meta.env.VITE_PARTNER_USER_ID as
   | string
   | undefined;
 const ENV_PARTNER_LABEL =
-  (import.meta.env.VITE_PARTNER_LABEL as string | undefined) || "Partner";
+  (import.meta.env.VITE_PARTNER_LABEL as string | undefined) || "Eş";
 const PARTNER_RESOLVER_URL = import.meta.env.VITE_PARTNER_RESOLVER_URL as
   | string
   | undefined;
@@ -195,7 +195,7 @@ function App() {
         .maybeSingle();
       if (error) {
         console.error("Failed to load data", error);
-        setSyncError("Could not load latest data (using local values).");
+        setSyncError("Son veriler alınamadı (yerel değerler kullanılıyor).");
         setState(initialState());
       } else if (data) {
         setState({
@@ -229,7 +229,7 @@ function App() {
       );
       if (error) {
         console.error("Failed to sync data", error);
-        setSyncError("Saving to Supabase failed (kept locally).");
+        setSyncError("Supabase’e kaydedilemedi (yerelde tutuluyor).");
       } else {
         setSyncError(null);
         setHistory((prev) => ({
@@ -291,7 +291,7 @@ function App() {
       if (error) {
         console.error("Failed to load partner data", error);
         setPartnerToday(null);
-        setPartnerError("Cannot load partner data (check share/permissions).");
+        setPartnerError("Eş verisi alınamadı (paylaşım/izinleri kontrol et).");
         return;
       }
       setPartnerError(null);
@@ -329,7 +329,7 @@ function App() {
 
     let nextId = partnerFormUserId.trim();
     const nextEmail = partnerFormEmail.trim();
-    const nextLabel = partnerFormLabel.trim() || "Partner";
+    const nextLabel = partnerFormLabel.trim() || "Eş";
 
     if (PARTNER_RESOLVER_URL && nextEmail) {
       try {
@@ -353,7 +353,7 @@ function App() {
       } catch (err) {
         console.error("Partner resolver error", err);
         setPartnerError(
-          "Could not resolve email to partner ID. Enter user ID manually or fix resolver."
+          "E-posta ile kullanıcı ID’si çözülemedi. Kullanıcı ID’sini elle girin veya çözücüyü düzeltin."
         );
         setPartnerSaving(false);
         return;
@@ -361,7 +361,7 @@ function App() {
     }
 
     if (!nextId) {
-      setPartnerError("Enter partner user ID (or set a resolver + email).");
+      setPartnerError("Eş kullanıcı ID’si girin (ya da çözücü + e‑posta kullanın).");
       setPartnerSaving(false);
       return;
     }
@@ -379,24 +379,24 @@ function App() {
       if (error) {
         console.error("Failed to save partner link", error);
         setPartnerError(
-          "Could not save partner on server; saved locally only."
+          "Eş bilgisi sunucuya kaydedilemedi; sadece yerelde saklandı."
         );
       } else {
         setPartnerStatus(
-          "Partner saved (synced). Make sure they shared access to you."
+          "Eş kaydedildi (senkronize). Erişimi paylaştıklarından emin ol."
         );
       }
     } else {
-      setPartnerStatus("Partner saved locally. Sign in to sync.");
+      setPartnerStatus("Eş yerelde kaydedildi. Senkron için giriş yap.");
     }
     setPartnerSaving(false);
   };
 
   const clearPartner = () => {
-    setPartnerConfig({ email: "", userId: "", label: "Partner" });
+    setPartnerConfig({ email: "", userId: "", label: "Eş" });
     setPartnerFormEmail("");
     setPartnerFormUserId("");
-    setPartnerFormLabel("Partner");
+    setPartnerFormLabel("Eş");
     setPartnerStatus(null);
     setPartnerError(null);
     setPartnerLoadedFromServer(false);
@@ -406,7 +406,7 @@ function App() {
     return (
       <div className="app-shell">
         <div className="card">
-          <p className="muted">Checking session…</p>
+          <p className="muted">Oturum kontrol ediliyor…</p>
         </div>
       </div>
     );
@@ -418,18 +418,16 @@ function App() {
         <header className="card app-header mb-5">
           <div>
             <h1 className="text-2xl! mb-5! text-center">
-              Daily Counter of Your Water, Poop and Farts!
+              Su, Kaka ve Gaz Günlük Sayacı
             </h1>
             <p className="muted">
-              Sign in to save your logs and keep water, poop, and fart counts
-              separate for each account.
+              Giriş yaparak kayıtlarını sakla; su, kaka ve gaz sayıları hesabına özel kalsın.
             </p>
           </div>
         </header>
         <AuthForm />
         <p className="muted card mt-5!">
-          You must sign in to view and log entries. Use the given email/password
-          to you.
+          Görmek ve kaydetmek için giriş yapmalısın. Sana verilen e‑posta/şifreyi kullan.
         </p>
       </div>
     );
@@ -444,7 +442,7 @@ function App() {
           }`}
           onClick={() => setActiveView("today")}
         >
-          Today
+          Bugün
         </button>
         <button
           className={`nav__item${
@@ -452,33 +450,33 @@ function App() {
           }`}
           onClick={() => setActiveView("history")}
         >
-          History
+          Geçmiş
         </button>
       </div>
       <div className="card auth-bar mt-4!">
         <div>
-          <p className="label">Signed in</p>
+          <p className="label">Giriş yapıldı</p>
           <p className="muted">{session.user.email}</p>
         </div>
         <button className="ghost" onClick={signOut}>
-          Sign out
+          Çıkış yap
         </button>
       </div>
       <header className="card app-header mb-4! mt-4!">
-        <div className="pill">Today · {displayDate}</div>
+        <div className="pill">Bugün · {displayDate}</div>
         <section className="card summary-card">
-          <p className="label">Today&apos;s totals</p>
+          <p className="label">Bugünkü toplamlar</p>
           <div className="summary-grid two-up">
             <div className="stat-block">
               <p className="muted font-bold! underline-offset-4 underline text-lg! mb-2!">
-                You
+                Sen
               </p>
               <div className="pill font-bold text-lg!">
-                Water: {waterLiters} L
+                Su: {waterLiters} L
               </div>
-              <div className="pill font-bold text-lg!">Poop: {state.poop}</div>
+              <div className="pill font-bold text-lg!">Kaka: {state.poop}</div>
               <div className="pill font-bold text-lg!">
-                Farts: {state.farts}
+                Gaz: {state.farts}
               </div>
             </div>
             {partnerConfig.userId && (
@@ -487,18 +485,18 @@ function App() {
                   {partnerConfig.label}
                 </p>
                 <div className="pill font-bold text-lg!">
-                  Water: {(partnerToday?.waterMl ?? 0) / 1000} L
+                  Su: {(partnerToday?.waterMl ?? 0) / 1000} L
                 </div>
                 <div className="pill font-bold text-lg!">
-                  Poop: {partnerToday?.poop ?? 0}
+                  Kaka: {partnerToday?.poop ?? 0}
                 </div>
                 <div className="pill font-bold text-lg!">
-                  Farts: {partnerToday?.farts ?? 0}
+                  Gaz: {partnerToday?.farts ?? 0}
                 </div>
                 {partnerError && <div className="pill">{partnerError}</div>}
                 {!partnerError && !partnerToday && (
                   <div className="pill">
-                    No data for {partnerConfig.label} today.
+                    Bugün {partnerConfig.label} için veri yok.
                   </div>
                 )}
               </div>
@@ -528,27 +526,26 @@ function App() {
             onRemove={() => adjust("farts", -1)}
           />
           <section className="card auth-form mt-3!">
-            <p className="label">Partner access</p>
+            <p className="label">Eş erişimi</p>
             <p className="muted">
-              Enter partner email (resolver) or user ID so you can see their
-              today totals. They also need to share their data with you.
+              Eşinin e-postasını (çözücü ile) veya kullanıcı ID’sini gir; bugünkü toplamlarını görebilmek için. Onların da veriyi seninle paylaşmış olması gerekir.
             </p>
             <div className="auth-inputs">
               <input
                 type="email"
-                placeholder="partner@example.com (optional)"
+                placeholder="partner@example.com (isteğe bağlı)"
                 value={partnerFormEmail}
                 onChange={(e) => setPartnerFormEmail(e.target.value)}
               />
               <input
                 type="text"
-                placeholder="Partner user ID"
+                placeholder="Eş kullanıcı ID’si"
                 value={partnerFormUserId}
                 onChange={(e) => setPartnerFormUserId(e.target.value)}
               />
               <input
                 type="text"
-                placeholder="Label"
+                placeholder="Etiket"
                 value={partnerFormLabel}
                 onChange={(e) => setPartnerFormLabel(e.target.value)}
               />
@@ -559,18 +556,17 @@ function App() {
                 disabled={partnerSaving}
                 type="button"
               >
-                {partnerSaving ? "Saving..." : "Save partner"}
+                {partnerSaving ? "Kaydediliyor..." : "Eşi kaydet"}
               </button>
               <button className="ghost" onClick={clearPartner} type="button">
-                Clear
+                Temizle
               </button>
             </div>
             {partnerStatus && <p className="pill">{partnerStatus}</p>}
             {partnerError && <p className="pill">{partnerError}</p>}
             {!PARTNER_RESOLVER_URL && (
               <p className="muted">
-                Tip: add VITE_PARTNER_RESOLVER_URL to resolve email → user ID
-                via an Edge Function.
+                İpucu: e‑posta → kullanıcı ID çözücüsü için VITE_PARTNER_RESOLVER_URL ekleyebilirsin.
               </p>
             )}
           </section>
@@ -580,7 +576,7 @@ function App() {
       {activeView === "history" && (
         <main>
           <section className="card">
-            <p className="label">Pick a date</p>
+            <p className="label">Tarih seç</p>
             <DayPicker
               mode="single"
               selected={selectedDate}
@@ -598,18 +594,18 @@ function App() {
             />
           </section>
           <section className="card tracker">
-            <p className="label">Selected day</p>
+            <p className="label">Seçilen gün</p>
             <h2>{selectedKey}</h2>
             {selectedSummary ? (
               <div className="summary-grid">
                 <div className="pill">
-                  Water: {(selectedSummary.waterMl / 1000).toFixed(2)} L
+                  Su: {(selectedSummary.waterMl / 1000).toFixed(2)} L
                 </div>
-                <div className="pill">Poop: {selectedSummary.poop}</div>
-                <div className="pill">Farts: {selectedSummary.farts}</div>
+                <div className="pill">Kaka: {selectedSummary.poop}</div>
+                <div className="pill">Gaz: {selectedSummary.farts}</div>
               </div>
             ) : (
-              <p className="muted">No data logged for this day yet.</p>
+              <p className="muted">Bu gün için henüz kayıt yok.</p>
             )}
           </section>
         </main>

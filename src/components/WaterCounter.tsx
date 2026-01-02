@@ -15,9 +15,9 @@ export default function WaterCounter({
     <section className="card tracker">
       <div className="tracker__header">
         <div>
-          <p className="label font-bold! text-2xl!">Water</p>
+          <p className="label font-bold! text-2xl!">Su</p>
           <h2 className="text-xl!">{displayLiters} L</h2>
-          <p className="muted">{waterMl} ml today</p>
+          <p className="muted">{waterMl} ml bugün</p>
         </div>
       </div>
       <div className="actions-grid">

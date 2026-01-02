@@ -6,16 +6,16 @@ type Props = {
 };
 
 const labels: Record<Item, string> = {
-  water: "Water",
-  poop: "Poop",
-  farts: "Farts",
+  water: "Su",
+  poop: "Kaka",
+  farts: "Gaz",
 };
 
 export default function Header({ active, onSelect }: Props) {
   return (
     <div className="header-bar card">
-      <div className="title">Daily Counter</div>
-      <div className="subtitle">Water · Poop · Farts</div>
+      <div className="title">Günlük Sayaç</div>
+      <div className="subtitle">Su · Kaka · Gaz</div>
       <div className="nav">
         {Object.entries(labels).map(([key, label]) => {
           const item = key as Item;
