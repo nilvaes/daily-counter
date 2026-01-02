@@ -11,8 +11,13 @@ createRoot(document.getElementById('root')!).render(
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js').catch((error) => {
-      console.error('Service worker registration failed', error);
-    });
+    if (import.meta.env.PROD) {
+      navigator.serviceWorker.register('/service-worker.js').catch((error) => {
+        console.error('Service worker registration failed', error);
+      });
+    } else {
+      // In dev, ensure any old service worker is cleared so Vite's HMR websocket works.
+      navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((reg) => reg.unregister()));
+    }
   });
 }

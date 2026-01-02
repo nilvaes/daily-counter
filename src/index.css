@@ -184,6 +184,89 @@ p {
   box-shadow: none;
 }
 
+.view-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.summary-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.rdp {
+  --rdp-accent-color: #22c55e;
+  --rdp-background-color: rgba(255, 255, 255, 0.08);
+  --rdp-accent-color-dark: #16a34a;
+  color: #e5e7eb;
+}
+
+.rdp button {
+  color: inherit;
+  border-radius: 12px;
+}
+
+.rdp-months {
+  justify-content: center;
+}
+
+.rdp-head_cell {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.rdp-day_today {
+  border: 1px solid rgba(34, 197, 94, 0.6);
+}
+
+.rdp-day_selected,
+.rdp-day_selected:focus-visible {
+  background-color: rgba(34, 197, 94, 0.2);
+  color: #e5e7eb;
+  border-color: rgba(34, 197, 94, 0.7);
+}
+
+.has-data {
+  box-shadow: inset 0 0 0 2px rgba(34, 197, 94, 0.4);
+}
+
+.auth-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-inputs {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.auth-form input {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: #e5e7eb;
+  padding: 12px 14px;
+}
+
+.auth-form input:focus {
+  outline: 1px solid rgba(34, 197, 94, 0.6);
+  border-color: rgba(34, 197, 94, 0.6);
+}
+
 .pill {
   display: inline-flex;
   align-items: center;
