@@ -277,9 +277,11 @@ function App() {
         <section className="card summary-card">
           <p className="label">Today&apos;s totals</p>
           <div className="summary-grid">
-            <div className="pill">Water: {waterLiters} L</div>
-            <div className="pill">Poop: {state.poop}</div>
-            <div className="pill">Farts: {state.farts}</div>
+            <div className="pill font-bold text-lg!">
+              Water: {waterLiters} L
+            </div>
+            <div className="pill font-bold text-lg!">Poop: {state.poop}</div>
+            <div className="pill font-bold text-lg!">Farts: {state.farts}</div>
           </div>
         </section>
       </header>
