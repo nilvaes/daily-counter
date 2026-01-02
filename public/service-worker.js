@@ -1,12 +1,8 @@
 const CACHE_NAME = 'daily-counter-cache-v1';
-const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.webmanifest',
-  '/icon-192.png',
-  '/icon-512.png',
-  '/apple-touch-icon.png',
-];
+const BASE_URL = self.registration.scope || '/';
+const assetPaths = ['', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
+const ASSETS = assetPaths.map((path) => new URL(path, BASE_URL).toString());
+const INDEX_HTML = new URL('index.html', BASE_URL).toString();
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
@@ -30,7 +26,7 @@ self.addEventListener('fetch', (event) => {
 
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request).catch(() => caches.match('/index.html')),
+      fetch(request).catch(() => caches.match(INDEX_HTML)),
     );
     return;
   }
