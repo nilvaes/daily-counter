@@ -7,6 +7,7 @@ import FartCounter from "./components/FartCounter";
 import PoopCounter from "./components/PoopCounter";
 import WaterCounter from "./components/WaterCounter";
 import supabase from "./utils/supabase";
+import { tr } from "react-day-picker/locale";
 
 type Counters = {
   date: string;
@@ -458,54 +459,58 @@ function App() {
           Takvim
         </button>
       </div>
-      <div className="card auth-bar mt-4!">
-        <div>
-          <p className="label">Giriş yapıldı</p>
-          <p className="muted">{session.user.email}</p>
-        </div>
-        <button className="ghost" onClick={signOut}>
-          Çıkış yap
-        </button>
-      </div>
-      <header className="card app-header mb-4! mt-4!">
-        <div className="pill">Bugün · {displayDate}</div>
-        <section className="card summary-card">
-          <p className="label">Bugünkü toplamlar</p>
-          <div className="summary-grid two-up">
-            <div className="stat-block">
-              <p className="muted font-bold! text-base!">Sen</p>
-              <div className="stat-row">
-                <span className="chip">Su: {waterLiters} L</span>
-                <span className="chip">Kaka: {state.poop}</span>
-                <span className="chip">Gaz: {state.farts}</span>
-              </div>
-            </div>
-            {partnerConfig.userId && (
-              <div className="stat-block">
-                <p className="muted font-bold! text-base!">
-                  {partnerConfig.label}
-                </p>
-                <div className="stat-row">
-                  <span className="chip">
-                    Su: {(partnerToday?.waterMl ?? 0) / 1000} L
-                  </span>
-                  <span className="chip">Kaka: {partnerToday?.poop ?? 0}</span>
-                  <span className="chip">Gaz: {partnerToday?.farts ?? 0}</span>
-                </div>
-                {partnerError && <div className="pill">{partnerError}</div>}
-                {!partnerError && !partnerToday && (
-                  <div className="pill">
-                    Bugün {partnerConfig.label} için veri yok.
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </section>
-      </header>
 
       {activeView === "today" && (
         <main>
+          <div className="card auth-bar mt-4!">
+            <div>
+              <p className="label">Giriş yapıldı</p>
+              <p className="muted">{session.user.email}</p>
+            </div>
+            <button className="ghost" onClick={signOut}>
+              Çıkış yap
+            </button>
+          </div>
+          <header className="card app-header mb-4! mt-4!">
+            <div className="pill">Bugün · {displayDate}</div>
+            <section className="card summary-card">
+              <p className="label">Bugünkü toplamlar</p>
+              <div className="summary-grid two-up">
+                <div className="stat-block">
+                  <p className="muted font-bold! text-base!">Sen</p>
+                  <div className="stat-row">
+                    <span className="chip">Su: {waterLiters} L</span>
+                    <span className="chip">Kaka: {state.poop}</span>
+                    <span className="chip">Gaz: {state.farts}</span>
+                  </div>
+                </div>
+                {partnerConfig.userId && (
+                  <div className="stat-block">
+                    <p className="muted font-bold! text-base!">
+                      {partnerConfig.label}
+                    </p>
+                    <div className="stat-row">
+                      <span className="chip">
+                        Su: {(partnerToday?.waterMl ?? 0) / 1000} L
+                      </span>
+                      <span className="chip">
+                        Kaka: {partnerToday?.poop ?? 0}
+                      </span>
+                      <span className="chip">
+                        Gaz: {partnerToday?.farts ?? 0}
+                      </span>
+                    </div>
+                    {partnerError && <div className="pill">{partnerError}</div>}
+                    {!partnerError && !partnerToday && (
+                      <div className="pill">
+                        Bugün {partnerConfig.label} için veri yok.
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </section>
+          </header>
           <WaterCounter
             waterMl={state.waterMl}
             displayLiters={waterLiters}
@@ -604,6 +609,7 @@ function App() {
           <section className="card">
             <p className="label">Tarih seç</p>
             <DayPicker
+              locale={tr}
               mode="single"
               selected={selectedDate}
               onSelect={(day) => setSelectedDate(day ?? undefined)}
