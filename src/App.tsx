@@ -477,7 +477,7 @@ function App() {
               <p className="label">Bugünkü toplamlar</p>
               <div className="summary-grid two-up">
                 <div className="stat-block">
-                  <p className="muted font-bold! text-base!">Sen</p>
+                  <p className="muted font-bold! text-base!">Ben</p>
                   <div className="stat-row">
                     <span className="chip">Su: {waterLiters} L</span>
                     <span className="chip">Kaka: {state.poop}</span>
