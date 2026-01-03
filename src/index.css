@@ -2,8 +2,10 @@
 
 :root {
   color-scheme: dark;
-  font-family: "SF Pro Display", "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
-  background: radial-gradient(circle at 20% 20%, #1f2937 0, transparent 30%), radial-gradient(circle at 80% 0%, #0f172a 0, transparent 35%), #0b1220;
+  font-family: "SF Pro Display", "Inter", "Segoe UI", system-ui, -apple-system,
+    sans-serif;
+  background: radial-gradient(circle at 20% 20%, #1f2937 0, transparent 30%),
+    radial-gradient(circle at 80% 0%, #0f172a 0, transparent 35%), #0b1220;
   color: #e5e7eb;
   min-height: 100%;
   text-rendering: optimizeLegibility;
@@ -25,12 +27,12 @@ body {
 }
 
 #root {
-  width: min(480px, 100%);
+  width: min(440px, 100%);
   min-height: 100vh;
-  padding: 24px 18px 32px;
+  padding: 16px 14px 24px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   backdrop-filter: blur(10px);
 }
 
@@ -54,8 +56,8 @@ button,
 .button {
   cursor: pointer;
   border: none;
-  border-radius: 12px;
-  padding: 12px 16px;
+  border-radius: 10px;
+  padding: 8px 10px;
   background: linear-gradient(135deg, #7c3aed, #a855f7);
   color: #0b0b13;
   font-weight: 700;
@@ -67,13 +69,13 @@ button,
 button:active,
 .button:active {
   transform: translateY(1px);
-  box-shadow: 0 8px 18px rgba(124, 58, 237, 0.22);
+  box-shadow: 0 6px 14px rgba(124, 58, 237, 0.2);
   filter: brightness(0.98);
 }
 
 .card {
-  border-radius: 18px;
-  padding: 18px;
+  border-radius: 12px;
+  padding: 12px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
@@ -86,8 +88,12 @@ button:active,
 .app-header {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.14), rgba(59, 130, 246, 0.12));
+  gap: 8px;
+  background: linear-gradient(
+    135deg,
+    rgba(124, 58, 237, 0.14),
+    rgba(59, 130, 246, 0.12)
+  );
 }
 
 .header-bar {
@@ -109,8 +115,8 @@ button:active,
 .nav {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 6px;
+  gap: 6px;
+  margin-top: 4px;
 }
 
 .nav__item {
@@ -135,13 +141,15 @@ button:active,
 .tracker {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
+  padding: 10px;
 }
 
 .tracker__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 2px;
 }
 
 .label {
@@ -154,13 +162,13 @@ button:active,
 
 h1 {
   margin: 0;
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 800;
 }
 
 h2 {
   margin: 0;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 800;
 }
 
@@ -174,8 +182,8 @@ p {
 
 .actions-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 6px;
 }
 
 .ghost {
@@ -187,37 +195,53 @@ p {
 .view-tabs {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: 6px;
+  margin-bottom: 6px;
 }
 
 .summary-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 6px;
+  gap: 6px;
 }
 
 .summary-card {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0px;
 }
 
 .two-up {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
 }
 
 .stat-block {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 12px;
-  border-radius: 14px;
+  gap: 4px;
+  padding: 5px;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e5e7eb;
+  font-weight: 600;
+  font-size: 13px;
 }
 
 .rdp {
@@ -289,6 +313,12 @@ p {
   border-color: rgba(124, 58, 237, 0.7);
 }
 
+.partner-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
 .pill {
   display: inline-flex;
   align-items: center;

@@ -99,6 +99,7 @@ function App() {
   const [partnerSaving, setPartnerSaving] = useState(false);
   const [partnerStatus, setPartnerStatus] = useState<string | null>(null);
   const [partnerLoadedFromServer, setPartnerLoadedFromServer] = useState(false);
+  const [partnerFormOpen, setPartnerFormOpen] = useState(false);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -361,7 +362,9 @@ function App() {
     }
 
     if (!nextId) {
-      setPartnerError("Eş kullanıcı ID’si girin (ya da çözücü + e‑posta kullanın).");
+      setPartnerError(
+        "Eş kullanıcı ID’si girin (ya da çözücü + e‑posta kullanın)."
+      );
       setPartnerSaving(false);
       return;
     }
@@ -421,13 +424,15 @@ function App() {
               Su, Kaka ve Gaz Günlük Sayacı
             </h1>
             <p className="muted">
-              Giriş yaparak kayıtlarını sakla; su, kaka ve gaz sayıları hesabına özel kalsın.
+              Giriş yaparak kayıtlarını sakla; su, kaka ve gaz sayıları hesabına
+              özel kalsın.
             </p>
           </div>
         </header>
         <AuthForm />
         <p className="muted card mt-5!">
-          Görmek ve kaydetmek için giriş yapmalısın. Sana verilen e‑posta/şifreyi kullan.
+          Görmek ve kaydetmek için giriş yapmalısın. Sana verilen
+          e‑posta/şifreyi kullan.
         </p>
       </div>
     );
@@ -450,7 +455,7 @@ function App() {
           }`}
           onClick={() => setActiveView("history")}
         >
-          Geçmiş
+          Takvim
         </button>
       </div>
       <div className="card auth-bar mt-4!">
@@ -468,30 +473,24 @@ function App() {
           <p className="label">Bugünkü toplamlar</p>
           <div className="summary-grid two-up">
             <div className="stat-block">
-              <p className="muted font-bold! underline-offset-4 underline text-lg! mb-2!">
-                Sen
-              </p>
-              <div className="pill font-bold text-lg!">
-                Su: {waterLiters} L
-              </div>
-              <div className="pill font-bold text-lg!">Kaka: {state.poop}</div>
-              <div className="pill font-bold text-lg!">
-                Gaz: {state.farts}
+              <p className="muted font-bold! text-base!">Sen</p>
+              <div className="stat-row">
+                <span className="chip">Su: {waterLiters} L</span>
+                <span className="chip">Kaka: {state.poop}</span>
+                <span className="chip">Gaz: {state.farts}</span>
               </div>
             </div>
             {partnerConfig.userId && (
               <div className="stat-block">
-                <p className="muted font-bold! text-lg! mb-2! underline underline-offset-4">
+                <p className="muted font-bold! text-base!">
                   {partnerConfig.label}
                 </p>
-                <div className="pill font-bold text-lg!">
-                  Su: {(partnerToday?.waterMl ?? 0) / 1000} L
-                </div>
-                <div className="pill font-bold text-lg!">
-                  Kaka: {partnerToday?.poop ?? 0}
-                </div>
-                <div className="pill font-bold text-lg!">
-                  Gaz: {partnerToday?.farts ?? 0}
+                <div className="stat-row">
+                  <span className="chip">
+                    Su: {(partnerToday?.waterMl ?? 0) / 1000} L
+                  </span>
+                  <span className="chip">Kaka: {partnerToday?.poop ?? 0}</span>
+                  <span className="chip">Gaz: {partnerToday?.farts ?? 0}</span>
                 </div>
                 {partnerError && <div className="pill">{partnerError}</div>}
                 {!partnerError && !partnerToday && (
@@ -526,48 +525,75 @@ function App() {
             onRemove={() => adjust("farts", -1)}
           />
           <section className="card auth-form mt-3!">
-            <p className="label">Eş erişimi</p>
-            <p className="muted">
-              Eşinin e-postasını (çözücü ile) veya kullanıcı ID’sini gir; bugünkü toplamlarını görebilmek için. Onların da veriyi seninle paylaşmış olması gerekir.
-            </p>
-            <div className="auth-inputs">
-              <input
-                type="email"
-                placeholder="partner@example.com (isteğe bağlı)"
-                value={partnerFormEmail}
-                onChange={(e) => setPartnerFormEmail(e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="Eş kullanıcı ID’si"
-                value={partnerFormUserId}
-                onChange={(e) => setPartnerFormUserId(e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="Etiket"
-                value={partnerFormLabel}
-                onChange={(e) => setPartnerFormLabel(e.target.value)}
-              />
-            </div>
-            <div className="actions-grid">
+            <div className="partner-header">
+              <div>
+                <p className="label">Eş erişimi</p>
+                {partnerConfig.userId && (
+                  <p className="muted">
+                    {partnerConfig.label}: {partnerConfig.userId.slice(0, 6)}…
+                  </p>
+                )}
+              </div>
               <button
-                onClick={savePartner}
-                disabled={partnerSaving}
+                className="ghost"
                 type="button"
+                onClick={() => setPartnerFormOpen((v) => !v)}
               >
-                {partnerSaving ? "Kaydediliyor..." : "Eşi kaydet"}
-              </button>
-              <button className="ghost" onClick={clearPartner} type="button">
-                Temizle
+                {partnerFormOpen ? "Kapat" : "Düzenle"}
               </button>
             </div>
-            {partnerStatus && <p className="pill">{partnerStatus}</p>}
-            {partnerError && <p className="pill">{partnerError}</p>}
-            {!PARTNER_RESOLVER_URL && (
-              <p className="muted">
-                İpucu: e‑posta → kullanıcı ID çözücüsü için VITE_PARTNER_RESOLVER_URL ekleyebilirsin.
-              </p>
+            {partnerFormOpen && (
+              <>
+                <p className="muted">
+                  Eşinin e-postasını (çözücü ile) veya kullanıcı ID’sini gir;
+                  bugünkü toplamlarını görebilmek için. Onların da veriyi
+                  seninle paylaşmış olması gerekir.
+                </p>
+                <div className="auth-inputs">
+                  <input
+                    type="email"
+                    placeholder="partner@example.com (isteğe bağlı)"
+                    value={partnerFormEmail}
+                    onChange={(e) => setPartnerFormEmail(e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Eş kullanıcı ID’si"
+                    value={partnerFormUserId}
+                    onChange={(e) => setPartnerFormUserId(e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Etiket"
+                    value={partnerFormLabel}
+                    onChange={(e) => setPartnerFormLabel(e.target.value)}
+                  />
+                </div>
+                <div className="actions-grid">
+                  <button
+                    onClick={savePartner}
+                    disabled={partnerSaving}
+                    type="button"
+                  >
+                    {partnerSaving ? "Kaydediliyor..." : "Eşi kaydet"}
+                  </button>
+                  <button
+                    className="ghost"
+                    onClick={clearPartner}
+                    type="button"
+                  >
+                    Temizle
+                  </button>
+                </div>
+                {partnerStatus && <p className="pill">{partnerStatus}</p>}
+                {partnerError && <p className="pill">{partnerError}</p>}
+                {!PARTNER_RESOLVER_URL && (
+                  <p className="muted">
+                    İpucu: e‑posta → kullanıcı ID çözücüsü için
+                    VITE_PARTNER_RESOLVER_URL ekleyebilirsin.
+                  </p>
+                )}
+              </>
             )}
           </section>
         </main>

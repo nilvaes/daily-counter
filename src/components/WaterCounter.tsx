@@ -21,11 +21,11 @@ export default function WaterCounter({
         </div>
       </div>
       <div className="actions-grid">
-        <button onClick={() => onAdd(250)}>+250 ml</button>
-        <button onClick={() => onAdd(500)}>+500 ml</button>
         <button onClick={() => onRemove(250)} className="ghost">
           -250 ml
         </button>
+        <button onClick={() => onAdd(250)}>+250 ml</button>
+        <button onClick={() => onAdd(500)}>+500 ml</button>
       </div>
     </section>
   );
