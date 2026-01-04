@@ -232,7 +232,7 @@ p {
 .summary-card {
   display: flex;
   flex-direction: column;
-  gap: 0px;
+  gap: 4px;
 }
 
 .two-up {
@@ -245,10 +245,7 @@ p {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 8px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 4px 0;
 }
 
 .stat-row {
@@ -262,11 +259,11 @@ p {
   align-items: center;
   padding: 8px 12px;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(168, 85, 247, 0.18));
-  border: 1px solid rgba(168, 85, 247, 0.35);
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.28), rgba(168, 85, 247, 0.25));
+  border: 1px solid rgba(168, 85, 247, 0.45);
   color: #f8fafc;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .rdp {
