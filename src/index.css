@@ -67,14 +67,14 @@ button,
   color: #0c0d12;
   font-weight: 700;
   letter-spacing: 0.01em;
-  box-shadow: 0 10px 30px rgba(249, 115, 22, 0.28);
+  box-shadow: 0 6px 16px rgba(249, 115, 22, 0.18);
   transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
 }
 
 button:active,
 .button:active {
   transform: translateY(1px);
-  box-shadow: 0 6px 14px rgba(249, 115, 22, 0.22);
+  box-shadow: 0 4px 10px rgba(249, 115, 22, 0.18);
   filter: brightness(0.98);
 }
 
@@ -83,7 +83,7 @@ button:active,
   padding: 12px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
 }
 
 .app-shell {
@@ -211,8 +211,8 @@ p {
 }
 
 .tracker-chip--active {
-  border-color: rgba(124, 58, 237, 0.5);
-  box-shadow: 0 6px 14px rgba(124, 58, 237, 0.2);
+  border-color: rgba(249, 115, 22, 0.5);
+  box-shadow: 0 4px 10px rgba(249, 115, 22, 0.15);
 }
 
 .ghost {
