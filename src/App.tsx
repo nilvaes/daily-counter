@@ -101,6 +101,7 @@ function App() {
   const [partnerStatus, setPartnerStatus] = useState<string | null>(null);
   const [partnerLoadedFromServer, setPartnerLoadedFromServer] = useState(false);
   const [partnerFormOpen, setPartnerFormOpen] = useState(false);
+  const [activeTracker, setActiveTracker] = useState<"water" | "poop" | "farts">("water");
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -511,24 +512,54 @@ function App() {
               </div>
             </section>
           </header>
-          <WaterCounter
-            waterMl={state.waterMl}
-            displayLiters={waterLiters}
-            onAdd={(amount) => adjust("waterMl", amount)}
-            onRemove={(amount) => adjust("waterMl", -amount)}
-          />
+          <div className="tracker-switch">
+            <button
+              className={`tracker-chip${activeTracker === "water" ? " tracker-chip--active" : ""}`}
+              onClick={() => setActiveTracker("water")}
+            >
+              <span>Su</span>
+              <span className="muted">{waterLiters} L</span>
+            </button>
+            <button
+              className={`tracker-chip${activeTracker === "poop" ? " tracker-chip--active" : ""}`}
+              onClick={() => setActiveTracker("poop")}
+            >
+              <span>Kaka</span>
+              <span className="muted">{state.poop}</span>
+            </button>
+            <button
+              className={`tracker-chip${activeTracker === "farts" ? " tracker-chip--active" : ""}`}
+              onClick={() => setActiveTracker("farts")}
+            >
+              <span>Gaz</span>
+              <span className="muted">{state.farts}</span>
+            </button>
+          </div>
 
-          <PoopCounter
-            count={state.poop}
-            onAdd={() => adjust("poop", 1)}
-            onRemove={() => adjust("poop", -1)}
-          />
+          {activeTracker === "water" && (
+            <WaterCounter
+              waterMl={state.waterMl}
+              displayLiters={waterLiters}
+              onAdd={(amount) => adjust("waterMl", amount)}
+              onRemove={(amount) => adjust("waterMl", -amount)}
+            />
+          )}
 
-          <FartCounter
-            count={state.farts}
-            onAdd={() => adjust("farts", 1)}
-            onRemove={() => adjust("farts", -1)}
-          />
+          {activeTracker === "poop" && (
+            <PoopCounter
+              count={state.poop}
+              onAdd={() => adjust("poop", 1)}
+              onRemove={() => adjust("poop", -1)}
+            />
+          )}
+
+          {activeTracker === "farts" && (
+            <FartCounter
+              count={state.farts}
+              onAdd={() => adjust("farts", 1)}
+              onRemove={() => adjust("farts", -1)}
+            />
+          )}
           <section className="card auth-form mt-3!">
             <div className="partner-header">
               <div>

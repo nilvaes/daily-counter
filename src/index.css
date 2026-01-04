@@ -186,6 +186,30 @@ p {
   gap: 6px;
 }
 
+.tracker-switch {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.tracker-chip {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: #e5e7eb;
+  padding: 10px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.tracker-chip--active {
+  border-color: rgba(124, 58, 237, 0.5);
+  box-shadow: 0 6px 14px rgba(124, 58, 237, 0.2);
+}
+
 .ghost {
   background: rgba(255, 255, 255, 0.06);
   color: #e5e7eb;
@@ -220,8 +244,8 @@ p {
 .stat-block {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 5px;
+  gap: 6px;
+  padding: 8px;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -230,18 +254,19 @@ p {
 .stat-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
 }
 
 .chip {
   display: inline-flex;
   align-items: center;
-  padding: 6px 10px;
+  padding: 8px 12px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #e5e7eb;
-  font-weight: 600;
-  font-size: 13px;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(168, 85, 247, 0.18));
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  color: #f8fafc;
+  font-weight: 700;
+  font-size: 15px;
 }
 
 .rdp {
