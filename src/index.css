@@ -1,17 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
   font-family: "SF Pro Display", "Inter", "Segoe UI", system-ui, -apple-system,
     sans-serif;
   background: radial-gradient(
-      circle at 25% 20%,
-      rgba(249, 115, 22, 0.14),
+      circle at 18% 18%,
+      rgba(87, 184, 202, 0.24),
       transparent 30%
     ),
-    radial-gradient(circle at 80% 0%, rgba(34, 211, 238, 0.12), transparent 36%),
-    #0b0f16;
-  color: #e7ecf2;
+    radial-gradient(
+      circle at 80% 0%,
+      rgba(255, 195, 141, 0.26),
+      transparent 36%
+    ),
+    radial-gradient(
+      circle at 40% 80%,
+      rgba(167, 214, 186, 0.22),
+      transparent 40%
+    ),
+    #f7f1e6;
+  color: #233238;
   min-height: 100%;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -38,7 +47,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
 }
 
 main {
@@ -49,7 +58,7 @@ main {
 }
 
 a {
-  color: #93c5fd;
+  color: #2da5c2;
   text-decoration: none;
 }
 
@@ -63,27 +72,34 @@ button,
   border: none;
   border-radius: 10px;
   padding: 8px 10px;
-  background: linear-gradient(135deg, #f97316, #f59e0b);
-  color: #0c0d12;
+  background: #2f8ca3;
+  color: #f7f1e6;
   font-weight: 700;
   letter-spacing: 0.01em;
-  box-shadow: 0 6px 16px rgba(249, 115, 22, 0.18);
-  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+  box-shadow: 0 8px 16px rgba(47, 140, 163, 0.16);
+  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease,
+    background 160ms ease;
+}
+
+button:hover,
+.button:hover {
+  filter: brightness(1.04);
+  box-shadow: 0 10px 18px rgba(47, 140, 163, 0.2);
 }
 
 button:active,
 .button:active {
   transform: translateY(1px);
-  box-shadow: 0 4px 10px rgba(249, 115, 22, 0.18);
+  box-shadow: 0 6px 12px rgba(36, 144, 167, 0.16);
   filter: brightness(0.98);
 }
 
 .card {
   border-radius: 12px;
   padding: 12px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid #d7e4ea;
+  box-shadow: 0 10px 26px rgba(35, 57, 70, 0.15);
 }
 
 .app-shell {
@@ -96,8 +112,8 @@ button:active,
   gap: 8px;
   background: linear-gradient(
     135deg,
-    rgba(249, 115, 22, 0.16),
-    rgba(14, 165, 233, 0.14)
+    rgba(45, 165, 194, 0.25),
+    rgba(242, 179, 120, 0.2)
   );
 }
 
@@ -113,7 +129,7 @@ button:active,
 }
 
 .subtitle {
-  color: #9ca3af;
+  color: #5f6f75;
   font-weight: 500;
 }
 
@@ -125,9 +141,9 @@ button:active,
 }
 
 .nav__item {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: #e5e7eb;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #cee1e6;
+  color: #233238;
   border-radius: 12px;
   padding: 10px 12px;
   font-weight: 700;
@@ -135,8 +151,8 @@ button:active,
 }
 
 .nav__item--active {
-  border-color: rgba(249, 115, 22, 0.5);
-  box-shadow: 0 8px 20px rgba(249, 115, 22, 0.2);
+  border-color: rgba(45, 165, 194, 0.45);
+  box-shadow: 0 10px 22px rgba(45, 165, 194, 0.25);
 }
 
 .nav__item:active {
@@ -161,7 +177,7 @@ button:active,
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: 12px;
-  color: #9ca3af;
+  color: #5f6f75;
   margin: 0 0 4px;
 }
 
@@ -182,7 +198,7 @@ p {
 }
 
 .muted {
-  color: #a1a1aa;
+  color: #6a7a81;
 }
 
 .actions-grid {
@@ -198,9 +214,9 @@ p {
 }
 
 .tracker-chip {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.04);
-  color: #e5e7eb;
+  border: 1px solid #d6e8ec;
+  background: rgba(255, 255, 255, 0.86);
+  color: #233238;
   padding: 10px;
   border-radius: 12px;
   display: flex;
@@ -211,13 +227,14 @@ p {
 }
 
 .tracker-chip--active {
-  border-color: rgba(249, 115, 22, 0.5);
-  box-shadow: 0 4px 10px rgba(249, 115, 22, 0.15);
+  border-color: rgba(45, 165, 194, 0.55);
+  box-shadow: 0 8px 18px rgba(45, 165, 194, 0.22);
 }
 
 .ghost {
-  background: rgba(255, 255, 255, 0.06);
-  color: #e5e7eb;
+  background: transparent;
+  color: #2f4b52;
+  border: 1px solid #c8d8df;
   box-shadow: none;
 }
 
@@ -264,18 +281,22 @@ p {
   align-items: center;
   padding: 8px 12px;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.28), rgba(168, 85, 247, 0.25));
-  border: 1px solid rgba(168, 85, 247, 0.45);
-  color: #f8fafc;
+  background: linear-gradient(
+    135deg,
+    rgba(45, 165, 194, 0.26),
+    rgba(119, 193, 180, 0.24)
+  );
+  border: 1px solid rgba(45, 165, 194, 0.4);
+  color: #1f2f33;
   font-weight: 700;
   font-size: 16px;
 }
 
 .rdp {
-  --rdp-accent-color: #f59e0b;
-  --rdp-background-color: rgba(255, 255, 255, 0.08);
-  --rdp-accent-color-dark: #f97316;
-  color: #e5e7eb;
+  --rdp-accent-color: #2da5c2;
+  --rdp-background-color: rgba(45, 165, 194, 0.12);
+  --rdp-accent-color-dark: #2a9ab6;
+  color: #1f2f33;
 }
 
 .rdp button {
@@ -288,23 +309,23 @@ p {
 }
 
 .rdp-head_cell {
-  color: #9ca3af;
+  color: #6a7a81;
   font-size: 12px;
 }
 
 .rdp-day_today {
-  border: 1px solid rgba(249, 115, 22, 0.6);
+  border: 1px solid rgba(45, 165, 194, 0.6);
 }
 
 .rdp-day_selected,
 .rdp-day_selected:focus-visible {
-  background-color: rgba(249, 115, 22, 0.22);
-  color: #e5e7eb;
-  border-color: rgba(249, 115, 22, 0.7);
+  background-color: rgba(45, 165, 194, 0.2);
+  color: #1f2f33;
+  border-color: rgba(45, 165, 194, 0.7);
 }
 
 .has-data {
-  box-shadow: inset 0 0 0 2px rgba(249, 115, 22, 0.35);
+  box-shadow: inset 0 0 0 2px rgba(45, 165, 194, 0.35);
 }
 
 .auth-bar {
@@ -329,15 +350,15 @@ p {
 .auth-form input {
   width: 100%;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.05);
-  color: #e5e7eb;
+  border: 1px solid #d6e4ea;
+  background: rgba(255, 255, 255, 0.88);
+  color: #233238;
   padding: 12px 14px;
 }
 
 .auth-form input:focus {
-  outline: 1px solid rgba(249, 115, 22, 0.7);
-  border-color: rgba(249, 115, 22, 0.7);
+  outline: 1px solid rgba(45, 165, 194, 0.7);
+  border-color: rgba(45, 165, 194, 0.7);
 }
 
 .partner-header {
@@ -352,8 +373,8 @@ p {
   gap: 6px;
   padding: 6px 12px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #cbd5e1;
+  background: #e8f1f4;
+  color: #233238;
   font-size: 13px;
   letter-spacing: 0.01em;
 }
